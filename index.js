@@ -27,7 +27,7 @@ app.get("/", function(req, res) {
     res.render(__dirname + "/views/index.ejs");
 });
 
-app.post("/", async function(req, res) {
+app.post("/", function(req, res) {
     const mainURL = req.body.longURL;
     // console.log(mainURL);
 
@@ -37,7 +37,7 @@ app.post("/", async function(req, res) {
     // }
     const short = nanoid(8);
 
-    await URL.create( {
+    URL.create( {
         shortendURL: short, 
         redirectURL: mainURL,
         visited: [],
