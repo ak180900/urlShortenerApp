@@ -36,26 +36,40 @@ app.post("/", function(req, res) {
     //     return res.status(400).json({ error: "url is required" });
     // }
     const short = nanoid(8);
-
-    URL.create( {
+    const newURL = new URL({
         shortendURL: short, 
         redirectURL: mainURL,
         visited: [],
     });
 
-    const slang = "http://localhost:8001/u/" + short;
+    URL.insertMany([newURL])
+        .then(() => {
+            const slang = "https://url-shortener-app-ak.vercel.app/u/" + short;
 
-    res.render(__dirname + "/views/success.ejs", {url: slang});
+            res.render(__dirname + "/views/success.ejs", {url: slang});
+        
+        })
+
+    // URL.create( {
+    //     shortendURL: short, 
+    //     redirectURL: mainURL,
+    //     visited: [],
+    // });
+
+    // const slang = "http://localhost:8001/u/" + short;
+    // const slang = "https://url-shortener-app-ak.vercel.app/u/" + short;
+
+    // res.render(__dirname + "/views/success.ejs", {url: slang});
 
 
     // return res.json({ id: short });
 });
 
 
-app.get("/u/:shortId", (req, res) => {
+app.get("/u/:shortId", async (req, res) => {
     const shortId = req.params.shortId;
     console.log(shortId);
-    const entry = URL.findOneAndUpdate(
+    const entry = await URL.findOneAndUpdate(
         {
             shortendURL: shortId,
         },
