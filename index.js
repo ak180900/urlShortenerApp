@@ -52,10 +52,10 @@ app.post("/", function(req, res) {
 });
 
 
-app.get("/u/:shortId", async (req, res) => {
+app.get("/u/:shortId", (req, res) => {
     const shortId = req.params.shortId;
     console.log(shortId);
-    const entry = await URL.findOneAndUpdate(
+    const entry = URL.findOneAndUpdate(
         {
             shortendURL: shortId,
         },
