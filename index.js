@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 
 const URL = require('./models/url');
 // const urlRoute = require('./routes/url');
+
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -20,6 +21,7 @@ app.use(express.json());
 
 // app.use("/url", urlRoute);
 app.get("/", function(req, res) {
+    console.log("home_index");
     res.render("index.ejs");
 });
 
@@ -39,7 +41,7 @@ app.post("/", async function(req, res) {
         visited: [],
     });
 
-    const slang = "http://localhost:8001/" + short;
+    const slang = "http://localhost:8001/u/" + short;
 
     res.render("success.ejs", {url: slang});
 
@@ -48,7 +50,7 @@ app.post("/", async function(req, res) {
 });
 
 
-app.get('/:shortId', async (req, res) => {
+app.get("/u/:shortId", async (req, res) => {
     const shortId = req.params.shortId;
     console.log(shortId);
     const entry = await URL.findOneAndUpdate(
