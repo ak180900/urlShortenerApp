@@ -17,8 +17,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 // const PORT = 8001;
 
-connectToMongoDB("mongodb+srv://ak18092000:dbpass123@cluster0.cc0d2ru.mongodb.net/urlShortnerApp")
-    .then(() => console.log('Mongodb connected'));
+
 
 app.use(express.json());
 
@@ -82,4 +81,6 @@ if(PORT == null || PORT == "")
 }
 app.listen(PORT, function () {
     console.log("server started at port : " + PORT);
+    connectToMongoDB("mongodb+srv://ak18092000:dbpass123@cluster0.cc0d2ru.mongodb.net/urlShortnerApp")
+    .then(() => console.log('Mongodb connected'));
 });
