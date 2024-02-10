@@ -1,17 +1,20 @@
 const express = require("express");
 const { connectToMongoDB } = require("./connect");
 const { nanoid } = require('nanoid');
+const ejs = require("ejs");
 
 // const { handleGenerateNewShortURL } = require("./controller/url");
 const bodyParser = require("body-parser");
+
 
 
 const URL = require('./models/url');
 // const urlRoute = require('./routes/url');
 
 const app = express();
+app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
-
+app.use(express.static("public"));
 // const PORT = 8001;
 
 connectToMongoDB("mongodb+srv://ak18092000:dbpass123@cluster0.cc0d2ru.mongodb.net/urlShortnerApp")
