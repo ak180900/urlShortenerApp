@@ -25,7 +25,7 @@ app.use(express.json());
 // app.use("/url", urlRoute);
 app.get("/", function(req, res) {
     console.log("home_index");
-    res.render("index.ejs");
+    res.render(__dirname + "/views/index.ejs");
 });
 
 app.post("/", async function(req, res) {
@@ -46,7 +46,7 @@ app.post("/", async function(req, res) {
 
     const slang = "http://localhost:8001/u/" + short;
 
-    res.render("success.ejs", {url: slang});
+    res.render(__dirname + "/views/success.ejs", {url: slang});
 
 
     // return res.json({ id: short });
