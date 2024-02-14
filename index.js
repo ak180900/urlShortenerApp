@@ -35,7 +35,7 @@ app.post("/", function(req, res) {
     // {
     //     return res.status(400).json({ error: "url is required" });
     // }
-    const short = nanoid(8);
+    const short = nanoid(4);
     const newURL = new URL({
         shortendURL: short, 
         redirectURL: mainURL,
@@ -44,7 +44,12 @@ app.post("/", function(req, res) {
 
     URL.insertMany([newURL])
         .then(() => {
-            const slang = "https://url-shortener-app-ak.vercel.app/u/" + short;
+            // const slang = "https://url-shortener-app-ak.vercel.app/u/" + short;
+            // const slang = "http://localhost:8001/u/" + short; 
+            console.log(req.headers.host);  
+            const slang = `${req.headers.host}/u/${short}`;
+            // const slang = req.headers.host + "/u/" + short;
+
 
             res.render(__dirname + "/views/success.ejs", {url: slang});
         
@@ -56,7 +61,6 @@ app.post("/", function(req, res) {
     //     visited: [],
     // });
 
-    // const slang = "http://localhost:8001/u/" + short;
     // const slang = "https://url-shortener-app-ak.vercel.app/u/" + short;
 
     // res.render(__dirname + "/views/success.ejs", {url: slang});
@@ -97,4 +101,4 @@ app.listen(PORT, function () {
     console.log("server started at port : " + PORT);
     connectToMongoDB("mongodb+srv://ak18092000:dbpass123@cluster0.cc0d2ru.mongodb.net/urlShortnerApp")
     .then(() => console.log('Mongodb connected'));
-});
+}); 
