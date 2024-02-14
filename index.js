@@ -23,7 +23,8 @@ app.use(express.json());
 
 // app.use("/url", urlRoute);
 app.get("/", function(req, res) {
-    console.log("home_index");
+    // console.log("home_index");
+    console.log(req.headers.host);
     res.render(__dirname + "/views/index.ejs");
 });
 
