@@ -4,7 +4,6 @@ const { nanoid } = require('nanoid');
 const ejs = require("ejs");
 const bodyParser = require("body-parser");
 const URL = require('./models/url');
-const config = require('./config'); // Assuming you have a config file as suggested in the previous response
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -65,12 +64,15 @@ app.get("/u/:shortId", async (req, res) => {
     }
 });
 
+const PORT = process.env.PORT || 8001;
+const MONGODB_URI = process.env.MONGOURI;
+
 const startServer = async () => {
     try {
-        await connectToMongoDB(config.MONGODB_URI);
+        await connectToMongoDB(MONGODB_URI);
         console.log('MongoDB connected');
-        app.listen(config.PORT, () => {
-            console.log(`Server started at port: ${config.PORT}`);
+        app.listen(PORT, () => {
+            console.log(`Server started at port: ${PORT}`);
         });
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
