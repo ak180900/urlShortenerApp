@@ -2,43 +2,40 @@ const express = require("express");
 const { connectToMongoDB } = require("./connect");
 const { nanoid } = require('nanoid');
 const ejs = require("ejs");
-require('dotenv').config();
-const mongouri = process.env.MONGOURI;
-
 const bodyParser = require("body-parser");
 const URL = require('./models/url');
+const config = require('./config'); // Assuming you have a config file as suggested in the previous response
 
 const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
 app.use(express.json());
 
-app.get("/", function (req, res) {
+app.get("/", (req, res) => {
     console.log(req.headers.host);
     res.render(__dirname + "/views/index.ejs");
 });
 
-app.post("/", function (req, res) {
+app.post("/", async (req, res) => {
     const mainURL = req.body.longURL;
     const short = nanoid(4);
 
-    const newURL = new URL({
-        shortendURL: short,
-        redirectURL: mainURL,
-        visited: [],
-    });
-
-    URL.insertMany([newURL])
-        .then(() => {
-            const slang = `${req.headers.host}/u/${short}`;
-            res.render(__dirname + "/views/success.ejs", { url: slang });
-        })
-        .catch(error => {
-            console.error("Error inserting into MongoDB:", error);
-            res.status(500).send("Internal Server Error");
+    try {
+        const newURL = new URL({
+            shortendURL: short,
+            redirectURL: mainURL,
+            visited: [],
         });
+
+        await URL.insertMany([newURL]);
+
+        const slang = `${req.headers.host}/u/${short}`;
+        res.render(__dirname + "/views/success.ejs", { url: slang });
+    } catch (error) {
+        console.error("Error inserting into MongoDB:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.get("/u/:shortId", async (req, res) => {
@@ -68,15 +65,16 @@ app.get("/u/:shortId", async (req, res) => {
     }
 });
 
-let PORT = process.env.PORT || 8001;
-
-app.listen(PORT, async function () {
-    console.log("Server started at port : " + PORT);
-    
+const startServer = async () => {
     try {
-        await connectToMongoDB(mongouri);
+        await connectToMongoDB(config.MONGODB_URI);
         console.log('MongoDB connected');
+        app.listen(config.PORT, () => {
+            console.log(`Server started at port: ${config.PORT}`);
+        });
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
     }
-});
+};
+
+startServer();
