@@ -12,7 +12,6 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
 app.use(express.json());
 
 app.get("/", function (req, res) {
@@ -20,25 +19,24 @@ app.get("/", function (req, res) {
     res.render(__dirname + "/views/index.ejs");
 });
 
-app.post("/", function (req, res) {
+app.post("/", async function (req, res) {
     const mainURL = req.body.longURL;
     const short = nanoid(4);
 
-    const newURL = new URL({
+    const newURL = {
         shortendURL: short,
         redirectURL: mainURL,
         visited: [],
-    });
+    };
 
-    URL.insertMany([newURL])
-        .then(() => {
-            const slang = `${req.headers.host}/u/${short}`;
-            res.render(__dirname + "/views/success.ejs", { url: slang });
-        })
-        .catch(error => {
-            console.error("Error inserting into MongoDB:", error);
-            res.status(500).send("Internal Server Error");
-        });
+    try {
+        await URL.create(newURL);
+        const slang = `${req.headers.host}/u/${short}`;
+        res.render(__dirname + "/views/success.ejs", { url: slang });
+    } catch (error) {
+        console.error("Error inserting into MongoDB:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 app.get("/u/:shortId", async (req, res) => {
@@ -72,7 +70,7 @@ let PORT = process.env.PORT || 8001;
 
 app.listen(PORT, async function () {
     console.log("Server started at port : " + PORT);
-    
+
     try {
         await connectToMongoDB(mongouri);
         console.log('MongoDB connected');
