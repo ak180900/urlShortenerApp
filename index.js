@@ -2,7 +2,7 @@ const express = require("express");
 const { connectToMongoDB } = require("./connect");
 const { nanoid } = require('nanoid');
 const ejs = require("ejs");
-require("dotenv).config();
+require("dotenv").config();
 const mongouri = process.env.MONGOURI;
 // const { handleGenerateNewShortURL } = require("./controller/url");
 const bodyParser = require("body-parser");
