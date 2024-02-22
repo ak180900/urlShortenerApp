@@ -32,7 +32,7 @@ app.post("/", function (req, res) {
 
     URL.insertMany([newURL])
         .then(() => {
-            const slang = `${req.headers.host}/u/${short}`;
+            const slang = `https://${req.headers.host}/u/${short}`;
             res.render(__dirname + "/views/success.ejs", { url: slang });
         })
         .catch(error => {
