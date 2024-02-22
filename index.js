@@ -2,7 +2,8 @@ const express = require("express");
 const { connectToMongoDB } = require("./connect");
 const { nanoid } = require('nanoid');
 const ejs = require("ejs");
-
+require("dotenv).config();
+const mongouri = process.env.MONGOURI;
 // const { handleGenerateNewShortURL } = require("./controller/url");
 const bodyParser = require("body-parser");
 
@@ -100,6 +101,6 @@ if(PORT == null || PORT == "")
 }
 app.listen(PORT, function () {
     console.log("server started at port : " + PORT);
-    connectToMongoDB("mongodb+srv://ak18092000:dbpass123@cluster0.cc0d2ru.mongodb.net/urlShortnerApp")
+    connectToMongoDB(mongouri);
     .then(() => console.log('Mongodb connected'));
 }); 
